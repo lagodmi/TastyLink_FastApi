@@ -1,0 +1,14 @@
+version: '3'
+
+volumes:
+  tasty_link_data:
+
+services:
+  db:
+    image: postgres:13.10
+    container_name: tasty_link
+    env_file: .env
+    volumes:
+      - tasty_link_data:/var/lib/postgresql/data
+    ports:
+      - 5454:5432
