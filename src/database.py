@@ -1,13 +1,14 @@
-import asyncio
-
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, declared_attr
 from sqlalchemy.ext.asyncio import (
     create_async_engine,
     async_sessionmaker,
-    async_scoped_session
+    AsyncSession
 )
 
-from config import DATABASE_URL, ECHO
+# from config import DATABASE_URL, ECHO
+
+DATABASE_URL = "postgresql+asyncpg://user:password@127.0.0.1:5454/TastyLink_db"
+ECHO = True
 
 
 class DatabaseHelper:
@@ -20,11 +21,9 @@ class DatabaseHelper:
             expire_on_commit=False
         )
 
-    def get_scope_session(self):
-        return async_scoped_session(
-            session_factory=self.session_factory,
-            scopefunc=asyncio.current_task
-        )
+    async def get_scope_session(self) -> AsyncSession:
+        async with self.session_factory() as session:
+            yield session
 
 
 db_helper = DatabaseHelper(DATABASE_URL, ECHO)
