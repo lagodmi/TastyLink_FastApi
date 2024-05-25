@@ -1,14 +1,25 @@
 version: '3'
 
 volumes:
-  tasty_link_data:
+  tasty_link_db:
+  tasty_link_static:
+  tasty_link_media:
 
 services:
   db:
     image: postgres:13.10
-    container_name: tasty_link
+    container_name: tasty_link_db
     env_file: .env
     volumes:
       - tasty_link_data:/var/lib/postgresql/data
-    ports:
-      - 5454:5432
+
+  # backend:
+  #   build: .
+  #   container_name: tasty_link_backend
+  #   # entrypoint: /app/entrypoint.sh
+  #   env_file: .env
+  #   volumes:
+  #     - static:/backend_static
+  #     - media:/app/media
+  #   depends_on:
+  #     - db
